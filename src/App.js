@@ -29,24 +29,30 @@ const {width, height} = Dimensions.get("window");
 export default class SwiperComponent extends Component {
   render() {
     return (
-      <Swiper style={styles.wrapper} horizontal={false} showsPagination={false}>
+      <View style={{height:height-10, marginTop:10}}>
+        <Swiper style={styles.wrapper} horizontal={false} showsPagination={false}>
         <View style={styles.slider}>
-          {/* <Text style={styles.text}>Hello Swiper</Text> */}
-          <Image style={{height, width}} source={Img1} />
+          {/* <Text style={styles.text}>1</Text> */}
+          <Image style={{height: height-10, width}} source={Img1} />
         </View>
         <View style={styles.slider}>
-          <Image style={{height, width}} source={Img5} />
+          {/* <Text style={styles.text}>2</Text> */}
+          <Image style={{height: height-10, width}} source={Img5} />
         </View>
         <View style={styles.slider}>
-          <Image style={{height, width}} source={Img6} />
+          {/* <Text style={styles.text}>3</Text> */}
+          <Image style={{height: height-10, width}} source={Img4} />
         </View>
         <View style={styles.slider}>
-          <Image style={{height, width}} source={Img6} />
+          {/* <Text style={styles.text}>4</Text> */}
+          <Image style={{height: height-10, width}} source={Img3} />
         </View>
         <View style={styles.slider}>
-          <Image style={{height, width}} source={Img6} />
+          {/* <Text style={styles.text}>5</Text> */}
+          <Image style={{height: height-10, width}} source={Img6} />
         </View>
       </Swiper>
+      </View>
     );
   }
 }

@@ -320,7 +320,7 @@ export default class extends Component {
     // contentOffset is not working in react 0.48.x so we need to use scrollTo
     // to emulate offset.
     if (this.state.total > 1) {
-      this.scrollView.scrollTo({ ...offset, animated: false });
+      this.scrollView.scrollTo({ ...offset, animated:  });
     }
 
     if (this.initialRender) {
@@ -342,20 +342,20 @@ export default class extends Component {
           if (this.state.index === 0) {
             scrollView.scrollTo(
               this.props.horizontal === false
-                ? { x: 0, y: this.state.height, animated: false }
-                : { x: this.state.width, y: 0, animated: false }
+                ? { x: 0, y: this.state.height, animated:  }
+                : { x: this.state.width, y: 0, animated:  }
             );
           } else if (this.state.index === this.state.total - 1) {
             this.props.horizontal === false
               ? this.scrollView.scrollTo({
                   x: 0,
                   y: this.state.height * this.state.total,
-                  animated: false
+                  animated: 
                 })
               : this.scrollView.scrollTo({
                   x: this.state.width * this.state.total,
                   y: 0,
-                  animated: false
+                  animated: 
                 });
           }
         }
@@ -782,6 +782,9 @@ export default class extends Component {
         onMomentumScrollEnd={this.onScrollEnd}
         onScrollEndDrag={this.onScrollEndDrag}
         style={this.props.scrollViewStyle}
+        scrollEventThrottle={25}
+        // scrollEnabled={false}
+        decelerationRate={0.1}
       >
         {pages}
       </ScrollView>
@@ -817,14 +820,18 @@ export default class extends Component {
     // For make infinite at least total > 1
     if (total > 1) {
       // Re-design a loop model for avoid img flickering
+      console.log('pages---823', pages);
       pages = Object.keys(children);
+      console.log('pages---825', pages);
       if (loop) {
-        pages.unshift(total - 1 + "");
-        pages.push("0");
+        // pages.unshift(total - 1 + "");
+        // pages.push("0");
       }
+      console.log('pages---830', pages);
 
       pages = pages.map((page, i) => {
         if (loadMinimal) {
+          console.log('831--if');
           if (
             (i >= index + loopVal - loadMinimalSize &&
               i <= index + loopVal + loadMinimalSize) ||
@@ -833,12 +840,14 @@ export default class extends Component {
             // The real last swiper should be keep
             (loop && i === total - 1)
           ) {
+            console.log('840---if');
             return (
               <View style={pageStyle} key={i}>
                 {children[page]}
               </View>
             );
           } else {
+            console.log('847---else');
             return (
               <View style={pageStyleLoading} key={i}>
                 {loadMinimalLoader ? loadMinimalLoader : <ActivityIndicator />}
@@ -846,6 +855,7 @@ export default class extends Component {
             );
           }
         } else {
+          console.log('855---else');
           return (
             <View style={pageStyle} key={i}>
               {children[page]}
@@ -854,6 +864,7 @@ export default class extends Component {
         }
       });
     } else {
+      console.log('864---else');
       pages = (
         <View style={pageStyle} key={0}>
           {children}
