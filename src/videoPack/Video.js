@@ -66,7 +66,7 @@ function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "save", function () {
-      console.log("Saving in local..");
+      // console.log("Saving in local..");
       return Promise.resolve();
     });
 
@@ -258,7 +258,11 @@ function (_Component) {
         style: style,
         paused: paused,
         muted: muted,
-        autoPlay: this.props.autoPlay
+        autoPlay: true,
+        loop: true,
+        // repeat: this.props.repeat,
+        poster:  this.props.poster
+
       });
     }
   }, {

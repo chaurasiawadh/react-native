@@ -211,7 +211,7 @@ export default class extends Component {
   }
 
   UNSAFE_componentWillUpdate(nextProps, nextState) {
-    console.log('nextState', nextState);
+    // console.log('nextState', nextState);
     // If the index has changed, we notify the parent via the onIndexChanged callback
     if (this.state.index !== nextState.index)
       this.props.onIndexChanged(nextState.index);
@@ -775,22 +775,25 @@ export default class extends Component {
     const i = event.nativeEvent.contentOffset.y / this.state.height;
     // console.log('scroll', i );
     // this.props.onIndexChanged(i)
-    if (i === 0) {
-      this.props.onIndexChanged(i)
-    }
-    if (i === 1) {
-      this.props.onIndexChanged(i)
-    }
-    if (i === 2) {
-      this.props.onIndexChanged(i)
-    }
-    if (i === 3) {
-      this.props.onIndexChanged(i)
-    }
-    if (i === 4) {
-      this.props.onIndexChanged(i)
-    }
-    if (i === 5) {
+    // if (i === 0) {
+    //   this.props.onIndexChanged(i)
+    // }
+    // if (i === 1) {
+    //   this.props.onIndexChanged(i)
+    // }
+    // if (i === 2) {
+    //   this.props.onIndexChanged(i)
+    // }
+    // if (i === 3) {
+    //   this.props.onIndexChanged(i)
+    // }
+    // if (i === 4) {
+    //   this.props.onIndexChanged(i)
+    // }
+    // if (i === 5) {
+    //   this.props.onIndexChanged(i)
+    // }
+    if (parseInt(i, 10) === i) {
       this.props.onIndexChanged(i)
     }
    };
@@ -872,7 +875,7 @@ export default class extends Component {
           } else {
             return (
               <View style={pageStyleLoading} key={i}>
-                {loadMinimalLoader ? loadMinimalLoader : <ActivityIndicator />}
+                {/* {loadMinimalLoader ? loadMinimalLoader : <ActivityIndicator />} */}
               </View>
             );
           }
