@@ -773,26 +773,6 @@ export default class extends Component {
 
   handleScroll = (event) => {
     const i = event.nativeEvent.contentOffset.y / this.state.height;
-    // console.log('scroll', i );
-    // this.props.onIndexChanged(i)
-    // if (i === 0) {
-    //   this.props.onIndexChanged(i)
-    // }
-    // if (i === 1) {
-    //   this.props.onIndexChanged(i)
-    // }
-    // if (i === 2) {
-    //   this.props.onIndexChanged(i)
-    // }
-    // if (i === 3) {
-    //   this.props.onIndexChanged(i)
-    // }
-    // if (i === 4) {
-    //   this.props.onIndexChanged(i)
-    // }
-    // if (i === 5) {
-    //   this.props.onIndexChanged(i)
-    // }
     if (parseInt(i, 10) === i) {
       this.props.onIndexChanged(i);
     }

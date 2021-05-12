@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import {
   AppRegistry,
   StyleSheet,
@@ -14,12 +14,14 @@ import Img4 from "./image/cartoon_4.png";
 import Img5 from "./image/cartoon_5.jpeg";
 import Img6 from "./image/cartoon_6.jpg";
 
-import Swiper from "./pack";
+import Swiper from "./package/pack";
 // import Video from "@lnormanha/react-native-web-video";
 import Video from "./videoPack";
 import Vid1 from "./image/1.mp4";
 import Vid2 from "./image/2.mpg";
 import Vid3 from "./image/3.webm";
+import ScrollCheck from "./scrollCheck";
+import GestureRecognizer, {swipeDirections} from './package/Gester';
 const apiURL = "https://stage.teasit.com/api/for-you?perPage=3";
 
 const styles = StyleSheet.create({
@@ -46,15 +48,19 @@ const styles = StyleSheet.create({
 const { width, height } = Dimensions.get("window");
 
 const SwiperComponent = () => {
+  const scrollRef = useRef();
   const [index, setIndex] = useState(0);
   const [videoList, setVideoList] = useState([]);
-  const [paginationVideo, setPaginationVideo] = useState({next:'', previous:''});
+  const [paginationVideo, setPaginationVideo] = useState({
+    next: "",
+    previous: "",
+  });
 
   const onIndexChanged = (i) => {
-    scollCheck(i)
+    scollCheck(i);
     setIndex(i);
     if (i === videoList.length - 2) {
-      apiCall('next', paginationVideo.next);
+      apiCall("next", paginationVideo.next);
     }
   };
 
@@ -62,27 +68,50 @@ const SwiperComponent = () => {
     apiCall();
   }, []);
 
-  const apiCall = (type = '', value = '') => {
+  const apiCall = (type = "", value = "") => {
     fetch(`${apiURL}&${type}=${value}`)
       .then((res) => res.json())
       .then((result) => {
         if (result && result.posts && result.posts.length) {
-          setVideoList(previous => [...previous, ...result.posts]);
-          setPaginationVideo({next:result.next, previous: result.previous})
+          setVideoList((previous) => [...previous, ...result.posts]);
+          setPaginationVideo({ next: result.next, previous: result.previous });
         }
       });
   };
   console.log("videoList", videoList);
 
   const scollCheck = (ind) => {
-    console.log('index', ind);
-    const isToggle = ind
+    console.log("index", ind);
+    const isToggle = ind;
+  };
+
+  
+  const onSwipe = (gestureName, gestureState) => {
+    console.log('xxxxxxxx');
+    const {SWIPE_UP, SWIPE_DOWN} = swipeDirections;
+   
+    switch (gestureName) {
+      case SWIPE_UP:
+        // this.setState({backgroundColor: 'red'});
+        console.log('up');
+        scrollRef.current.updateIndex({}, 'y', 1);
+        console.log('xccccccccc', scrollRef.current);
+        break;
+      case SWIPE_DOWN:
+        // this.setState({backgroundColor: 'green'});
+        break;
+    }
   }
 
+  return <ScrollCheck/>
+
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 80
+  };
+
   return (
-    <View
-      style={{ height: height - 10, marginTop: 10}}
-    >
+    <View style={{ height: height - 10, marginTop: 10 }}>
       <Swiper
         style={styles.wrapper}
         horizontal={false}
@@ -90,13 +119,44 @@ const SwiperComponent = () => {
         onIndexChanged={onIndexChanged}
         loop={false}
         bounces={true}
-        // scrollEnabled={false}
+        scrollEnabled={false}
+        ref={scrollRef}
       >
         {videoList &&
           videoList.length > 0 &&
           videoList.map((item, i) => (
             <View key={i} style={styles.slider}>
-              {(i === index || i === index - 1 || i === index + 1) ? <Video
+              <GestureRecognizer
+                onSwipe={(direction, state) => onSwipe(direction, state)}
+                onSwipeUp={(state) => {
+                  console.log("state", state);
+                }}
+                onSwipeDown={(state) => {
+                  console.log("state", state);
+                }}
+                config={config}
+                style={{
+                  flex: 1,
+                  backgroundColor: 'yellow',
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: i === index ? "pink" : 'blue',
+                    height,
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                  }}
+                >
+                  <Text>AAAAAAAAAA</Text>
+                  <Text>
+                    onSwipe callback received gesture:
+                  </Text>
+                </View>
+               </GestureRecognizer>
+              {/* {(i === index || i === index - 1 || i === index + 1) ? <Video
                 source={{
                   uri: item.media.src,
                 }}
@@ -116,7 +176,7 @@ const SwiperComponent = () => {
                 // autoPlay={index - 1 === i ? true : false}
                 autoPlay={true}
                 // paused={index === i ? false : true}
-              /> : null}
+              /> : null} */}
             </View>
           ))}
       </Swiper>
