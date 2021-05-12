@@ -211,6 +211,7 @@ export default class extends Component {
   }
 
   UNSAFE_componentWillUpdate(nextProps, nextState) {
+    console.log('nextState', nextState);
     // If the index has changed, we notify the parent via the onIndexChanged callback
     if (this.state.index !== nextState.index)
       this.props.onIndexChanged(nextState.index);
@@ -770,7 +771,32 @@ export default class extends Component {
     }
   };
 
+  handleScroll = (event) => {
+    const i = event.nativeEvent.contentOffset.y / this.state.height;
+    // console.log('scroll', i );
+    // this.props.onIndexChanged(i)
+    if (i === 0) {
+      this.props.onIndexChanged(i)
+    }
+    if (i === 1) {
+      this.props.onIndexChanged(i)
+    }
+    if (i === 2) {
+      this.props.onIndexChanged(i)
+    }
+    if (i === 3) {
+      this.props.onIndexChanged(i)
+    }
+    if (i === 4) {
+      this.props.onIndexChanged(i)
+    }
+    if (i === 5) {
+      this.props.onIndexChanged(i)
+    }
+   };
+
   renderScrollView = (pages) => {
+    // console.log('pages', pages);
     return (
       <ScrollView
         ref={this.refScrollView}
@@ -785,6 +811,7 @@ export default class extends Component {
         scrollEventThrottle={25}
         // scrollEnabled={false}
         decelerationRate={0.1}
+        onScroll={this.handleScroll} 
       >
         {pages}
       </ScrollView>
@@ -820,18 +847,15 @@ export default class extends Component {
     // For make infinite at least total > 1
     if (total > 1) {
       // Re-design a loop model for avoid img flickering
-      console.log('pages---823', pages);
       pages = Object.keys(children);
-      console.log('pages---825', pages);
       if (loop) {
-        // pages.unshift(total - 1 + "");
+        pages.unshift(total - 1 + "");
         // pages.push("0");
       }
-      console.log('pages---830', pages);
 
       pages = pages.map((page, i) => {
+        // console.log('i', i);
         if (loadMinimal) {
-          console.log('831--if');
           if (
             (i >= index + loopVal - loadMinimalSize &&
               i <= index + loopVal + loadMinimalSize) ||
@@ -840,14 +864,12 @@ export default class extends Component {
             // The real last swiper should be keep
             (loop && i === total - 1)
           ) {
-            console.log('840---if');
             return (
               <View style={pageStyle} key={i}>
                 {children[page]}
               </View>
             );
           } else {
-            console.log('847---else');
             return (
               <View style={pageStyleLoading} key={i}>
                 {loadMinimalLoader ? loadMinimalLoader : <ActivityIndicator />}
@@ -855,7 +877,6 @@ export default class extends Component {
             );
           }
         } else {
-          console.log('855---else');
           return (
             <View style={pageStyle} key={i}>
               {children[page]}
@@ -864,7 +885,6 @@ export default class extends Component {
         }
       });
     } else {
-      console.log('864---else');
       pages = (
         <View style={pageStyle} key={0}>
           {children}
