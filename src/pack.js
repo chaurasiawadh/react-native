@@ -8,7 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 
 /**
@@ -19,20 +19,20 @@ const styles = {
   container: {
     backgroundColor: "transparent",
     position: "relative",
-    flex: 1
+    flex: 1,
   },
 
   wrapperIOS: {
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
 
   wrapperAndroid: {
     backgroundColor: "transparent",
-    flex: 1
+    flex: 1,
   },
 
   slide: {
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
 
   pagination_x: {
@@ -44,7 +44,7 @@ const styles = {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
 
   pagination_y: {
@@ -56,7 +56,7 @@ const styles = {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
 
   title: {
@@ -68,7 +68,7 @@ const styles = {
     left: 0,
     flexWrap: "nowrap",
     width: 250,
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
 
   buttonWrapper: {
@@ -81,13 +81,13 @@ const styles = {
     paddingHorizontal: 10,
     paddingVertical: 10,
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   buttonText: {
     fontSize: 50,
-    color: "#007aff"
-  }
+    color: "#007aff",
+  },
 };
 
 // missing `module.exports = exports['default'];` with babel6
@@ -104,7 +104,7 @@ export default class extends Component {
     style: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.number,
-      PropTypes.array
+      PropTypes.array,
     ]),
     scrollViewStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
     pagingEnabled: PropTypes.bool,
@@ -130,19 +130,19 @@ export default class extends Component {
     dotStyle: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.number,
-      PropTypes.array
+      PropTypes.array,
     ]),
     activeDotStyle: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.number,
-      PropTypes.array
+      PropTypes.array,
     ]),
     dotColor: PropTypes.string,
     activeDotColor: PropTypes.string,
     /**
      * Called when the index has changed because the user swiped.
      */
-    onIndexChanged: PropTypes.func
+    onIndexChanged: PropTypes.func,
   };
 
   /**
@@ -170,7 +170,7 @@ export default class extends Component {
     autoplayTimeout: 2.5,
     autoplayDirection: true,
     index: 0,
-    onIndexChanged: () => null
+    onIndexChanged: () => null,
   };
 
   /**
@@ -241,7 +241,7 @@ export default class extends Component {
       autoplayEnd: false,
       children: null,
       loopJump: false,
-      offset: {}
+      offset: {},
     };
 
     // Support Optional render page
@@ -287,7 +287,7 @@ export default class extends Component {
 
     this.internals = {
       ...this.internals,
-      isScrolling: false
+      isScrolling: false,
     };
     return initState;
   }
@@ -351,12 +351,12 @@ export default class extends Component {
               ? this.scrollView.scrollTo({
                   x: 0,
                   y: this.state.height * this.state.total,
-                  animated: true
+                  animated: true,
                 })
               : this.scrollView.scrollTo({
                   x: this.state.width * this.state.total,
                   y: 0,
-                  animated: true
+                  animated: true,
                 });
           }
         }
@@ -416,11 +416,11 @@ export default class extends Component {
     if (!e.nativeEvent.contentOffset) {
       if (this.state.dir === "x") {
         e.nativeEvent.contentOffset = {
-          x: e.nativeEvent.position * this.state.width
+          x: e.nativeEvent.position * this.state.width,
         };
       } else {
         e.nativeEvent.contentOffset = {
-          y: e.nativeEvent.position * this.state.height
+          y: e.nativeEvent.position * this.state.height,
         };
       }
     }
@@ -538,7 +538,7 @@ export default class extends Component {
     // update scroll state
     this.internals.isScrolling = true;
     this.setState({
-      autoplayEnd: false
+      autoplayEnd: false,
     });
 
     // trigger onScrollEnd manually in android
@@ -546,8 +546,8 @@ export default class extends Component {
       setImmediate(() => {
         this.onScrollEnd({
           nativeEvent: {
-            position: diff
-          }
+            position: diff,
+          },
         });
       });
     }
@@ -580,7 +580,7 @@ export default class extends Component {
     // update scroll state
     this.internals.isScrolling = true;
     this.setState({
-      autoplayEnd: false
+      autoplayEnd: false,
     });
 
     // trigger onScrollEnd manually in android
@@ -588,8 +588,8 @@ export default class extends Component {
       setImmediate(() => {
         this.onScrollEnd({
           nativeEvent: {
-            position: diff
-          }
+            position: diff,
+          },
         });
       });
     }
@@ -645,9 +645,9 @@ export default class extends Component {
             marginLeft: 3,
             marginRight: 3,
             marginTop: 3,
-            marginBottom: 3
+            marginBottom: 3,
           },
-          this.props.activeDotStyle
+          this.props.activeDotStyle,
         ]}
       />
     );
@@ -662,9 +662,9 @@ export default class extends Component {
             marginLeft: 3,
             marginRight: 3,
             marginTop: 3,
-            marginBottom: 3
+            marginBottom: 3,
           },
-          this.props.dotStyle
+          this.props.dotStyle,
         ]}
       />
     );
@@ -681,7 +681,7 @@ export default class extends Component {
         pointerEvents="none"
         style={[
           styles["pagination_" + this.state.dir],
-          this.props.paginationStyle
+          this.props.paginationStyle,
         ]}
       >
         {dots}
@@ -745,9 +745,9 @@ export default class extends Component {
           styles.buttonWrapper,
           {
             width: this.state.width,
-            height: this.state.height
+            height: this.state.height,
           },
-          this.props.buttonWrapperStyle
+          this.props.buttonWrapperStyle,
         ]}
       >
         {this.renderPrevButton()}
@@ -794,9 +794,9 @@ export default class extends Component {
     //   this.props.onIndexChanged(i)
     // }
     if (parseInt(i, 10) === i) {
-      this.props.onIndexChanged(i)
+      this.props.onIndexChanged(i);
     }
-   };
+  };
 
   renderScrollView = (pages) => {
     // console.log('pages', pages);
@@ -810,11 +810,22 @@ export default class extends Component {
         onScrollBeginDrag={this.onScrollBegin}
         onMomentumScrollEnd={this.onScrollEnd}
         onScrollEndDrag={this.onScrollEndDrag}
-        style={this.props.scrollViewStyle}
-        scrollEventThrottle={25}
+        style={[
+          this.props.scrollViewStyle,
+          {
+            // position: "inherit",
+            // top: 0,
+            // // left: 0,
+            // width: "100%",
+            // height: "100%",
+            // overflow: "hidden",
+            // pointerEvents: "none",
+          },
+        ]}
+        scrollEventThrottle={100}
         // scrollEnabled={false}
         decelerationRate={0.1}
-        onScroll={this.handleScroll} 
+        onScroll={this.handleScroll}
       >
         {pages}
       </ScrollView>
@@ -831,7 +842,7 @@ export default class extends Component {
       loadMinimalLoader,
       renderPagination,
       showsButtons,
-      showsPagination
+      showsPagination,
     } = this.props;
     // let dir = state.dir
     // let key = 0
@@ -844,7 +855,7 @@ export default class extends Component {
       height,
       flex: 1,
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
     };
 
     // For make infinite at least total > 1

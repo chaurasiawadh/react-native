@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#9DD6EB",
   },
   text: {
     color: "#fff",
@@ -49,31 +48,10 @@ const { width, height } = Dimensions.get("window");
 const SwiperComponent = () => {
   const [index, setIndex] = useState(0);
   const [videoList, setVideoList] = useState([]);
-  const [paginationVideo, setPaginationVideo] = useState({next:'', previous:''})
-
-  const loadStart = (event) => {
-    // console.log('loadStart', event);
-  };
-  const setDuration = (event) => {
-    // console.log('setDuration', event);
-  };
-  const setTime = (event) => {
-    // console.log('setTime', event);
-  };
-  const onEnd = (event) => {
-    // console.log('onEnd', event);
-  };
-  const videoError = (event) => {
-    // console.log('videoError', event);
-  };
-  const onBuffer = (event) => {
-    // console.log('onBuffer', event);
-  };
-  const onTimedMetadata = (event) => {
-    // console.log('onTimedMetadata', event);
-  };
+  const [paginationVideo, setPaginationVideo] = useState({next:'', previous:''});
 
   const onIndexChanged = (i) => {
+    scollCheck(i)
     setIndex(i);
     if (i === videoList.length - 2) {
       apiCall('next', paginationVideo.next);
@@ -96,9 +74,14 @@ const SwiperComponent = () => {
   };
   console.log("videoList", videoList);
 
+  const scollCheck = (ind) => {
+    console.log('index', ind);
+    const isToggle = ind
+  }
+
   return (
     <View
-      style={{ height: height - 10, marginTop: 10, backgroundColor: "red" }}
+      style={{ height: height - 10, marginTop: 10}}
     >
       <Swiper
         style={styles.wrapper}
@@ -107,6 +90,7 @@ const SwiperComponent = () => {
         onIndexChanged={onIndexChanged}
         loop={false}
         bounces={true}
+        // scrollEnabled={false}
       >
         {videoList &&
           videoList.length > 0 &&
@@ -125,14 +109,7 @@ const SwiperComponent = () => {
                   left: 0,
                   overflow: 'hidden'
                 }}
-                resizeMode="contain"
-                onLoadStart={loadStart}
-                onLoad={setDuration}
-                onProgress={setTime}
-                onEnd={onEnd}
-                onError={videoError}
-                onBuffer={onBuffer}
-                onTimedMetadata={onTimedMetadata}
+                resizeMode="cover"
                 poster={item.media.thumb}
                 muted={index === i ? false : true}
                 // controls={true}
@@ -141,70 +118,7 @@ const SwiperComponent = () => {
                 // paused={index === i ? false : true}
               /> : null}
             </View>
-            // :
-            //     <View>
-            //       {/* <Text style={{fontSize:100}}>{index}-Loading-{i}</Text> */}
-            //       {/* <Image source={{uri: item.media.thumb}} style={{ width, height }}/> */}
-            //     </View>
           ))}
-
-        {/* <View style={[styles.slider, { backgroundColor: "green" }]}>
-          {index === 2 ? (
-            <Video
-              source={{ uri: Vid3 }}
-              style={{ width, height }}
-              controls={true}
-              resizeMode="cover"
-              autoPlay={true}
-              // repeat={true}
-              // audioOnly={true}
-              // playInBackground={false}
-              // playWhenInactive={false}
-            />
-          ) : (
-            <View></View>
-          )}
-        </View>
-        <View style={styles.slider}>
-          {index === 3 ? (
-            <Video
-              source={{ uri: Vid1 }}
-              style={{ width, height }}
-              // controls={true}
-              resizeMode="cover"
-              // repeat={true}
-              // audioOnly={true}
-              // playInBackground={false}
-              // playWhenInactive={false}
-              autoPlay={true}
-            />
-          ) : (
-            <View></View>
-          )}
-        </View>
-        <View style={styles.slider}>
-          {index === 4 ? (
-            <Video
-              source={{ uri: Vid3 }}
-              style={{ width, height }}
-              // controls={true}
-              resizeMode="cover"
-              // repeat={true}
-              // audioOnly={true}
-              autoPlay={true}
-              // playInBackground={false}
-              // playWhenInactive={false}
-            />
-          ) : (
-            <View></View>
-          )}
-        </View>
-        
-         */}
-
-        {/* <View style={styles.slider}>
-          <Image style={{ height: height - 10, width }} source={Img6} />
-        </View> */}
       </Swiper>
     </View>
   );
