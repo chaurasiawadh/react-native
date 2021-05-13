@@ -5,6 +5,7 @@ import {
   Text,
   View,
   Image,
+  ImageBackground,
   Dimensions,
 } from "react-native";
 import Img1 from "./image/cartoon_1.jpeg";
@@ -21,7 +22,7 @@ import Vid1 from "./image/1.mp4";
 import Vid2 from "./image/2.mpg";
 import Vid3 from "./image/3.webm";
 import ScrollCheck from "./scrollCheck";
-import GestureRecognizer, {swipeDirections} from './package/Gester';
+import GestureRecognizer, { swipeDirections } from "./package/Gester";
 const apiURL = "https://stage.teasit.com/api/for-you?perPage=3";
 
 const styles = StyleSheet.create({
@@ -59,7 +60,7 @@ const SwiperComponent = () => {
   const onIndexChanged = (i) => {
     scollCheck(i);
     setIndex(i);
-    if (i === videoList.length - 2) {
+    if (i === videoList.length - 1) {
       apiCall("next", paginationVideo.next);
     }
   };
@@ -69,6 +70,7 @@ const SwiperComponent = () => {
   }, []);
 
   const apiCall = (type = "", value = "") => {
+    console.log("api call");
     fetch(`${apiURL}&${type}=${value}`)
       .then((res) => res.json())
       .then((result) => {
@@ -85,33 +87,38 @@ const SwiperComponent = () => {
     const isToggle = ind;
   };
 
-  
   const onSwipe = (gestureName, gestureState) => {
-    console.log('xxxxxxxx');
-    const {SWIPE_UP, SWIPE_DOWN} = swipeDirections;
-   
+    console.log("xxxxxxxx");
+    const { SWIPE_UP, SWIPE_DOWN } = swipeDirections;
+
     switch (gestureName) {
       case SWIPE_UP:
         // this.setState({backgroundColor: 'red'});
-        console.log('up');
-        scrollRef.current.updateIndex({}, 'y', 1);
-        console.log('xccccccccc', scrollRef.current);
+        console.log("up");
+        scrollRef.current.updateIndex({}, "y", 1);
+        console.log("xccccccccc", scrollRef.current);
         break;
       case SWIPE_DOWN:
         // this.setState({backgroundColor: 'green'});
         break;
     }
-  }
-
-  return <ScrollCheck/>
-
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80
   };
 
-  return (
-    <View style={{ height: height - 10, marginTop: 10 }}>
+  // return <ScrollCheck/>
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 80,
+  };
+
+  return videoList &&
+  videoList.length > 0 ? (
+    // <View style={{ height: height - 10, marginTop: 10 }}>
+    <ImageBackground
+      style={{ flex: 1 }}
+      // source={require("./image/cartoon_1.jpeg")}
+      source={videoList[index].media.thumb}
+      blurRadius={30}
+    >
       <Swiper
         style={styles.wrapper}
         horizontal={false}
@@ -119,7 +126,7 @@ const SwiperComponent = () => {
         onIndexChanged={onIndexChanged}
         loop={false}
         bounces={true}
-        scrollEnabled={false}
+        // scrollEnabled={false}
         ref={scrollRef}
       >
         {videoList &&
@@ -127,61 +134,63 @@ const SwiperComponent = () => {
           videoList.map((item, i) => (
             <View key={i} style={styles.slider}>
               <GestureRecognizer
-                onSwipe={(direction, state) => onSwipe(direction, state)}
-                onSwipeUp={(state) => {
-                  console.log("state", state);
-                }}
-                onSwipeDown={(state) => {
-                  console.log("state", state);
-                }}
-                config={config}
+                // onSwipe={(direction, state) => onSwipe(direction, state)}
+                // onSwipeUp={(state) => {
+                //   console.log("state", state);
+                // }}
+                // onSwipeDown={(state) => {
+                //   console.log("state", state);
+                // }}
+                // config={config}
                 style={{
                   flex: 1,
-                  backgroundColor: 'yellow',
                 }}
               >
-                <View
-                  style={{
-                    backgroundColor: i === index ? "pink" : 'blue',
-                    height,
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    display: "flex",
+                {/* <Text style={{ backgroundColor: "green", paddingLeft: 140 }}>
+                  {i} === {index}{" "}
+                </Text> */}
+                {/* {i === index || i === index - 1 || i === index + 1 ?  */}
+                {true ? 
+                (
+                  <Video
+                    source={{
+                      uri: item.media.src,
+                    }}
+                    // style={{ width, height }}
+                    style={{
+                      position: "inherit",
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      left: 0,
+                      overflow: "hidden",
+                      height: "-webkit-fill-available",
+                    }}
+                    resizeMode="cover"
+                    poster={item.media.thumb}
+                    muted={index === i ? false : true}
+                    // controls={true}
+                    // autoPlay={index - 1 === i ? true : false}
+                    autoPlay={i === index ? true : false}
+                    paused={index === i ? false : true}
+                    onLoadStart={() => {
+                      console.log('...I am loading...')
                   }}
-                >
-                  <Text>AAAAAAAAAA</Text>
-                  <Text>
-                    onSwipe callback received gesture:
-                  </Text>
-                </View>
-               </GestureRecognizer>
-              {/* {(i === index || i === index - 1 || i === index + 1) ? <Video
-                source={{
-                  uri: item.media.src,
-                }}
-                // style={{ width, height }}
-                style={{    
-                  position: 'inherit',
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                  overflow: 'hidden'
-                }}
-                resizeMode="cover"
-                poster={item.media.thumb}
-                muted={index === i ? false : true}
-                // controls={true}
-                // autoPlay={index - 1 === i ? true : false}
-                autoPlay={true}
-                // paused={index === i ? false : true}
-              /> : null} */}
+                  onLoadedData={() => {
+                      console.log('Data is loaded!')
+                  }}
+                  onLoad={() => console.log('onLoad')}
+                  />
+                ) : null}
+              </GestureRecognizer>
             </View>
           ))}
       </Swiper>
-    </View>
-  );
+    </ImageBackground>
+  ): 
+  <View>
+
+  </View>
 };
 
 export default SwiperComponent;

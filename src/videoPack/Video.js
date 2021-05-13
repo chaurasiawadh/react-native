@@ -244,7 +244,8 @@ function (_Component) {
       return (0, _react.createElement)('video', {
         src: this._url,
         onLoadStart: this._onLoadStart,
-        onLoadedData: this._onLoad,
+        // onLoadedData: this._onLoad,
+        onLoadedData: this.props.onLoadedData,
         onError: this._onError,
         onProgress: this._onProgress,
         onSeeking: this._onSeek,
