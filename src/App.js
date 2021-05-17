@@ -8,6 +8,7 @@ import {
   Dimensions,
   Animated,
   PanResponder,
+  ScrollView
 } from "react-native";
 import Swiper from "./package/pack";
 // import Video from "@lnormanha/react-native-web-video";
