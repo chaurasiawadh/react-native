@@ -50,10 +50,11 @@ class GestureRecognizer extends Component {
   }
   
   _handleShouldSetPanResponder(evt, gestureState) {
-    return (
-      evt.nativeEvent.touches.length === 1 &&
-      !this._gestureIsClick(gestureState)
-    );
+    this.props.onCustomDrag(evt, gestureState, this._getSwipeDirection(gestureState));
+    // return (
+    //   evt.nativeEvent.touches.length === 1 &&
+    //   !this._gestureIsClick(gestureState)
+    // );
   }
 
   _gestureIsClick(gestureState) {

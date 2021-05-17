@@ -5,24 +5,14 @@ import {
   Text,
   View,
   Image,
-  ImageBackground,
   Dimensions,
+  Animated,
+  PanResponder,
 } from "react-native";
-import Img1 from "./image/cartoon_1.jpeg";
-import Img2 from "./image/cartoon_2.png";
-import Img3 from "./image/cartoon_3.png";
-import Img4 from "./image/cartoon_4.png";
-import Img5 from "./image/cartoon_5.jpeg";
-import Img6 from "./image/cartoon_6.jpg";
-
 import Swiper from "./package/pack";
 // import Video from "@lnormanha/react-native-web-video";
-import Video from "./videoPack";
-import Vid1 from "./image/1.mp4";
-import Vid2 from "./image/2.mpg";
-import Vid3 from "./image/3.webm";
-import ScrollCheck from "./scrollCheck";
 import GestureRecognizer, { swipeDirections } from "./package/Gester";
+import Video from "./videoPack";
 const apiURL = "https://stage.teasit.com/api/for-you?perPage=3";
 
 const styles = StyleSheet.create({
@@ -50,6 +40,7 @@ const { width, height } = Dimensions.get("window");
 
 const SwiperComponent = () => {
   const scrollRef = useRef();
+  const heightValue = useRef(height);
   const [index, setIndex] = useState(0);
   const [videoList, setVideoList] = useState([]);
   const [paginationVideo, setPaginationVideo] = useState({
@@ -57,13 +48,58 @@ const SwiperComponent = () => {
     previous: "",
   });
 
+  const pan = useRef(new Animated.ValueXY()).current;
+  const [y, setY] = useState(0);
+
+  let heightCheck = 0;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value,
+        });
+      },
+      // onPanResponderMove: Animated.event(
+      //   [
+      //     null,
+      //     { dx: pan.x, dy: pan.y }
+      //   ]
+      // ),
+      onPanResponderMove: (e, h) => {
+        // console.log('h-dy', h.dy);
+        // console.log('moveY', h.moveY);
+        // console.log('y0', h.y0);
+        if (0 > h.dy) {
+          // console.log('yese');
+        }
+        const isDirection = heightCheck < h.moveY ? true : false;
+        setY((pre) => {
+          const diff = height - h.moveY;
+          if (diff > 550) {
+            scrollRef.current.scrollTo(1);
+            return pre;
+          }
+          heightCheck = h.moveY;
+          return isDirection ? pre + 10 : pre - 10;
+        });
+      },
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+      },
+    })
+  ).current;
+
   const onIndexChanged = (i) => {
-    scollCheck(i);
+    console.log("Page: ", i);
     setIndex(i);
     if (i === videoList.length - 1) {
       apiCall("next", paginationVideo.next);
     }
   };
+
+  // console.log("Y===", y);
 
   useEffect(() => {
     apiCall();
@@ -78,49 +114,33 @@ const SwiperComponent = () => {
           setVideoList((previous) => [...previous, ...result.posts]);
           setPaginationVideo({ next: result.next, previous: result.previous });
         }
+      })
+      .catch(() => {
+        // setVideoList((previous) => [...previous, ...vi]);
       });
   };
-  console.log("videoList", videoList);
 
-  const scollCheck = (ind) => {
-    console.log("index", ind);
-    const isToggle = ind;
-  };
-
-  const onSwipe = (gestureName, gestureState) => {
-    console.log("xxxxxxxx");
-    const { SWIPE_UP, SWIPE_DOWN } = swipeDirections;
-
-    switch (gestureName) {
-      case SWIPE_UP:
-        // this.setState({backgroundColor: 'red'});
-        console.log("up");
-        scrollRef.current.updateIndex({}, "y", 1);
-        console.log("xccccccccc", scrollRef.current);
-        break;
-      case SWIPE_DOWN:
-        // this.setState({backgroundColor: 'green'});
-        break;
-    }
-  };
-
-  // return <ScrollCheck/>
   const config = {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 80,
   };
 
-  return videoList &&
-  videoList.length > 0 ? (
-    // <View style={{ height: height - 10, marginTop: 10 }}>
-    <ImageBackground
-      style={{ flex: 1 }}
-      // source={require("./image/cartoon_1.jpeg")}
-      source={videoList[index].media.thumb}
-      blurRadius={30}
-    >
+  const onCustomDrag = (e, i) => {
+    setIndex(i);
+    console.log(i, "cccccc", e);
+    if (i === videoList.length - 2) {
+      apiCall("next", paginationVideo.next);
+    }
+  };
+
+  // console.log('videoList', videoList);
+  return (
+    <View style={{ height: height - 4, marginTop: 4 }}>
       <Swiper
-        style={styles.wrapper}
+        style={{
+          ...styles.wrapper,
+          // transform: [{ translateX: 0 }, { translateY: y }],
+        }}
         horizontal={false}
         showsPagination={false}
         onIndexChanged={onIndexChanged}
@@ -132,65 +152,51 @@ const SwiperComponent = () => {
         {videoList &&
           videoList.length > 0 &&
           videoList.map((item, i) => (
-            <View key={i} style={styles.slider}>
-              <GestureRecognizer
-                // onSwipe={(direction, state) => onSwipe(direction, state)}
-                // onSwipeUp={(state) => {
-                //   console.log("state", state);
-                // }}
-                // onSwipeDown={(state) => {
-                //   console.log("state", state);
-                // }}
+            <Animated.View
+              // {...panResponder.panHandlers}
+              key={i}
+              style={styles.slider}
+            >
+              {/* <GestureRecognizer
+                onCustomDrag={(e) => onCustomDrag(e, i)}
                 // config={config}
                 style={{
-                  flex: 1,
+                  flex: 1
                 }}
-              >
-                {/* <Text style={{ backgroundColor: "green", paddingLeft: 140 }}>
-                  {i} === {index}{" "}
-                </Text> */}
-                {/* {i === index || i === index - 1 || i === index + 1 ?  */}
-                {true ? 
-                (
-                  <Video
-                    source={{
-                      uri: item.media.src,
-                    }}
-                    // style={{ width, height }}
-                    style={{
-                      position: "inherit",
-                      top: 0,
-                      right: 0,
-                      bottom: 0,
-                      left: 0,
-                      overflow: "hidden",
-                      height: "-webkit-fill-available",
-                    }}
-                    resizeMode="cover"
-                    poster={item.media.thumb}
-                    muted={index === i ? false : true}
-                    // controls={true}
-                    // autoPlay={index - 1 === i ? true : false}
-                    autoPlay={i === index ? true : false}
-                    paused={index === i ? false : true}
-                    onLoadStart={() => {
-                      console.log('...I am loading...')
+              > */}
+                {/* <Text style={{backgroundColor:'red', flex:1}}>AAAAAAAAAA{item.id}</Text> */}
+                {i === index || i === index - 1 || i === index + 1 ?  (
+                <Video
+                  source={{
+                    uri: item.media.teaser,
                   }}
-                  onLoadedData={() => {
-                      console.log('Data is loaded!')
+                  // style={{ width, height }}
+                  style={{
+                    position: "inherit",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    overflow: "hidden",
+                    backgroundVideo:'green'
                   }}
-                  onLoad={() => console.log('onLoad')}
-                  />
+                  resizeMode="cover"
+                  poster={item.media.teaserThumb}
+                  // controls={true}
+                  // muted={true}
+                  muted={index === i ? false : true}
+                  // controls={true}
+                  // autoPlay={index - 1 === i ? true : false}
+                  autoPlay={true}
+                  // paused={index === i ? false : true}
+                />
                 ) : null}
-              </GestureRecognizer>
-            </View>
+              {/* </GestureRecognizer> */}
+            </Animated.View>
           ))}
       </Swiper>
-    </ImageBackground>
-  ): 
-  <View>
-
-  </View>
+    </View>
+  );
 };
 
 export default SwiperComponent;
