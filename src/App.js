@@ -62,22 +62,24 @@ const SwiperComponent = () => {
   return (
     <View style={{ height: height - 1, marginTop: 1 }}>
       <Swiper
-        style={styles.wrapper}
+        style={[styles.wrapper,{scrollSnapType: 'y mandatory'}]}
         horizontal={false}
         showsPagination={false}
         onIndexChanged={onIndexChanged}
         loop={false}
         bounces={true}
         // scrollEnabled={false}
+
       >
         {videoList &&
           videoList.length > 0 &&
           videoList.map((item, i) => (
-            <View key={i} style={styles.slider}>
-              {i === index || i === index - 1 || i === index + 1 ? (
+            <View key={i} style={[styles.slider,{scrollSnapAlign: 'start',
+            scrollSnapStop: 'always'}]}>
+              {(i === index || i === index - 1 || i === index + 1) && item.media.src ? (
                 <Video
                   source={{
-                    uri: item.media.teaser,
+                    uri: item.media.src,
                   }}
                   // style={{ width, height }}
                   style={{
@@ -107,6 +109,7 @@ const SwiperComponent = () => {
                     alignSelf: "center",
                   }}
                 >
+                  <Text style={{backgroundColor:'red', fontSize:40}}>{index}</Text>
                   <Text style={styles.follow}>Following</Text>
                   <Text style={[styles.follow, styles.forU]}>For You</Text>
                 </View>
